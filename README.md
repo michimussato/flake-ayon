@@ -1,9 +1,12 @@
 <!-- TOC -->
 * [Flake: Ayon Launcher](#flake-ayon-launcher)
   * [Get Launcher](#get-launcher)
+  * [Updates from Remote](#updates-from-remote)
   * [flake](#flake)
-  * [nix develop](#nix-develop)
   * [nix run](#nix-run)
+  * [nix develop](#nix-develop)
+  * [Manual Run](#manual-run)
+* [Known Issues](#known-issues)
 <!-- TOC -->
 
 ---
@@ -68,16 +71,16 @@ nix flake update --flake github:michimussato/flake-ayon
         └───ayon-1-6-3-package: package 'ayon-1-6-3-package'
 ```
 
-## nix develop
-
-```shell
-nix develop github:michimussato/flake-ayon#ayon-1-6-3-devshell
-```
-
 ## nix run
 
 ```shell
 nix run github:michimussato/flake-ayon#ayon-1-6-3-app
+```
+
+## nix develop
+
+```shell
+nix develop github:michimussato/flake-ayon#ayon-1-6-3-devshell
 ```
 
 ## Manual Run
