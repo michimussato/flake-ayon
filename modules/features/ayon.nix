@@ -116,13 +116,7 @@
       '';
 
     ayon-default-args = [
-      # "--python-use-system-env"
-      # "--enable-autoexec"
-      # "--verbose" # expects a verbosity level
-      # "4"  # fatal, error, warning, info, debug, and trace
-      # "--debug"
-      # "--debug-cycles"
-      # "--debug-ffmpeg"
+      "--debug"
     ];
 
   in
@@ -172,6 +166,18 @@
           #
           # automatically export all functions declared here:
           # set -a
+
+          ayon-help() {
+            set -x;
+            command ayon $DEFAULT_ARGS --help;
+            set +x;
+          }
+
+          ayon-interactive() {
+            set -x;
+            command ayon $DEFAULT_ARGS interactive;
+            set +x;
+          }
 
           # set +a
         '';
