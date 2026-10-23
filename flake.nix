@@ -12,12 +12,12 @@
     flake-parts = {
       # https://flake.parts/
       url = "github:hercules-ci/flake-parts";
-      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.nixpkgs-lib.follows = "nixpkgs";
     };
     import-tree = {
       # https://import-tree.denful.dev/
       url = "github:denful/import-tree";
-      inputs.nixpkgs.follows = "nixpkgs";
+      # inputs.nixpkgs.follows = "nixpkgs";
     };
 
     devshell = {
