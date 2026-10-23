@@ -37,6 +37,8 @@
         libxcb-cursor
         libxcb-keysyms
         libxcb-wm
+
+        which
       ];
 
       # Ayon 1.6.3
