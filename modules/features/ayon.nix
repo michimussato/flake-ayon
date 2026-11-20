@@ -64,7 +64,7 @@
         # Setting XTERM seems to be needed when launching ayon from an IDE terminal
         # https://runebook.dev/en/docs/python/library/curses/curses.setupterm
         # Values for TERM:
-        # - xtern
+        # - xterm
         # - screen
         # - linux
         # - xterm-256color
@@ -105,14 +105,56 @@
 
       # # This is the launch script for Blender 4.4.3
       # maybe we could use `/run/current-system/sw/bin/xdg-terminal "command"`
+      #    4847    3082 Ss    |   |   \_ bash
+      #   13139    4847 S+    |   |   |   \_ bwrap
+      #   13218   13139 S+    |   |   |       \_ init
+      #   13221   13218 S+    |   |   |           \_ sleep
+
+      # $ pidof bwrap
+      #15717
+
+      # $ ps -e -o pid,ppid,stat,comm --forest
+
+      # $ ps -p $(pidof bwrap) -o args | cat
+      # /nix/store/f2bsh1n6snqdldnjdshdy1lw3hnlfxwi-bubblewrap-0.12.0/bin/bwrap --dev-bind /dev /dev --proc /proc --chdir /home/michael/git/repos/flake-ayon --die-with-parent --bind /nix /nix --tmpfs /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc --tmpfs /etc --symlink /etc/ld.so.conf /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc/ld.so.conf --symlink /etc/ld.so.cache /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc/ld.so.cache --ro-bind /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc/rpc /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc/rpc --remount-ro /nix/store/dphsh3jff8w6n9p3xbfmkia5krqwv52f-glibc-2.42-103/etc --symlink /nix/store/j8bhmgnvyzah3nzhr2bdwz7xar12gqgl-ayon-1-6-3-package-init /init --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/nix-support /nix-support --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/usr /usr --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/dbus-1 /etc/dbus-1 --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/pam.d /etc/pam.d --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/profile.d /etc/profile.d --ro-bind /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/systemd /etc/systemd --ro-bind /etc /.host-etc --symlink /usr/bin /bin --symlink /usr/lib /lib --symlink /usr/lib32 /lib32 --symlink /usr/lib64 /lib64 --symlink /usr/libexec /libexec --symlink /usr/sbin /sbin --symlink /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/login.defs /etc/login.defs --symlink /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/mtab /etc/mtab --symlink /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/profile /etc/profile --symlink /nix/store/25dqpx40vx07gfgysrdd21138vg5r85i-ayon-1-6-3-package-fhsenv-rootfs/etc/rpc /etc/rpc --symlink /.host-etc/static /etc/static --symlink /.host-etc/nix /etc/nix --symlink /.host-etc/shells /etc/shells --symlink /.host-etc/bashrc /etc/bashrc --symlink /.host-etc/passwd /etc/passwd --symlink /.host-etc/group /etc/group --symlink /.host-etc/shadow /etc/shadow --symlink /.host-etc/hosts /etc/hosts --symlink /.host-etc/resolv.conf /etc/resolv.conf --symlink /.host-etc/nsswitch.conf /etc/nsswitch.conf --symlink /.host-etc/profiles /etc/profiles --symlink /.host-etc/sudoers /etc/sudoers --symlink /.host-etc/localtime /etc/localtime --symlink /.host-etc/zoneinfo /etc/zoneinfo --symlink /.host-etc/machine-id /etc/machine-id --symlink /.host-etc/os-release /etc/os-release --symlink /.host-etc/fonts /etc/fonts --symlink /.host-etc/alsa /etc/alsa --symlink /.host-etc/ssl/certs /etc/ssl/certs --symlink /.host-etc/pki /etc/pki --symlink /.host-etc/dconf /etc/dconf --bind /boot /boot --bind /data /data --bind /home /home --bind /lost+found /lost+found --bind /media /media --bind /mounts /mounts --bind /opt /opt --bind /root /root --bind /run /run --bind /srv /srv --bind /sys /sys --bind /tmp /tmp --bind /var /var --tmpfs /tmp/.X11-unix --ro-bind-try /tmp/.X11-unix/X0 /tmp/.X11-unix/X0 /nix/store/cc7xc42knz0xi5i13i4agap64labrxjl-container-init
+      # So, `bwrap` does `--bind /data /data` which will list `/data` as a mount point
+      # in the container but that does not reflect the mount status of `/data` on
+      # the host.
+      # We can now use `--task <tid>` to query for `/data` on the host directly:
+      # `findmnt --task 1 /data`, which will search `/proc/1/mountinfo` instead
+      # of `/proc/$$/mountinfo` (`$$` refers to self `pid`).
       runScript-ayon-launcher = pkgs.writeScriptBin "ayon-${version-dashed}-bin" ''
+        # env
+        echo "Process ID:" $$
+        # mount
+        # findmnt /data
+        # findmnt -m /data || echo "reading from /etc/fstab"
+        # findmnt -s /data || echo "reading from /etc/fstab"
+        # findmnt -N 1 /data || echo "/data not mounted on host"
+        # findmnt --real /data
+        # sleep infinity
+        # exit 1
+        # For some reason, findmnt is not working as expected
+        # probably because we are in a bwrap (nix-shell -p bubblewrap) container and all directories
+        # are mounted from the host. That does not mean that the
+        # the host mounted it in the first place.
+
+        # Exit if /data is not mounted outside the `bwrap` container
+        ${pkgs.util-linux}/bin/findmnt --task 1 /data || echo "Is /data mounted? Exitting..." && exit 1;
+
+        # mount
+        # mount | awk '{if ($3 == "/data") { exit 0}} ENDFILE{exit -1}'
+        # cat /proc/mounts
+        # mountpoint /data
+        # mountpoint -q /data && echo hi
+
         echo "Running ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon)..." \
           && ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon) | sort --ignore-leading-blanks --ignore-case | grep -E --color "\b(not found)\b|$" \
           && echo "Launching $(which ayon)" \
           && echo "- with default args \"${builtins.toString ayon-default-args}\"" \
           && echo "- with extra args \"$@\"" \
           && echo "..." \
-          && ayon ${builtins.toString ayon-default-args} $@
+          && ayon ${builtins.toString ayon-default-args} $@ || ${pkgs.util-linux}/bin/findmnt --mountpoint /data > /dev/null && echo -e "\nIs /data mounted?"
       '';
 
     ayon-default-args = [
