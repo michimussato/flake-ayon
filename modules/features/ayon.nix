@@ -74,7 +74,7 @@
         # Not sure yet if TERMINFO is needed as well
         # export TERMINFO=/etc/terminfo
 
-        # export DEFAULT_ARGS="${builtins.toString ayon-default-args}"
+        export DEFAULT_ARGS="${builtins.toString ayon-default-args}"
       '';
 
       fhs-ayon = pkgs.buildFHSEnv {
@@ -133,9 +133,14 @@
         # We can't use `readlink /data` in the container
         # echo "/data points to: $(readlink /data)"
 
-        # Exit (to be implemented) if /data (/mounts/data/sshfs) is not mounted outside the `bwrap` container
-        ${pkgs.util-linux}/bin/findmnt --task 1 /mounts/data/sshfs > /dev/null || echo -e "\nIs /data mounted?\n"
+        ${pkgs.util-linux}/bin/findmnt --task 1 /mounts/data/sshfs > /dev/null
 
+        # $? represents the last return code
+        if [ $? -gt 0 ]; then
+          echo -e "\nIs /data mounted?\n"
+          echo "Exitting."
+          exit 1
+        fi
 
         echo "Running ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon)..." \
           && ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon) | sort --ignore-leading-blanks --ignore-case | grep -E --color "\b(not found)\b|$" \
