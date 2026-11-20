@@ -126,8 +126,12 @@
       runScript-ayon-launcher = pkgs.writeScriptBin "ayon-${version-dashed}-bin" ''
         echo "Process ID:" $$
 
-        # Exit if /data is not mounted outside the `bwrap` container
-        ${pkgs.util-linux}/bin/findmnt --task 1 /data || echo "Is /data mounted? Exitting..." && exit 1;
+        # We can't use `readlink /data` in the container
+        # echo "/data points to: $(readlink /data)"
+
+        # Exit (to be implemented) if /data (/mounts/data/sshfs) is not mounted outside the `bwrap` container
+        ${pkgs.util-linux}/bin/findmnt --task 1 /mounts/data/sshfs || echo -e "\nIs /data mounted?\n"
+
 
         echo "Running ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon)..." \
           && ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon) | sort --ignore-leading-blanks --ignore-case | grep -E --color "\b(not found)\b|$" \
