@@ -49,6 +49,8 @@
       profile = ''
         export PATH=${path}:$PATH
 
+        export AYON_LAUNCHER_STORAGE_DIR="/data/share/tools/AYON-deps"
+
         # don't remember what this was for:
         # (does not seem to have an effect on the env anyway)
         # an alternative could be to use lib.makeLibraryPath
@@ -126,11 +128,13 @@
       runScript-ayon-launcher = pkgs.writeScriptBin "ayon-${version-dashed}-bin" ''
         echo "Process ID:" $$
 
+        echo "AYON_LAUNCHER_STORAGE_DIR is:" $AYON_LAUNCHER_STORAGE_DIR
+
         # We can't use `readlink /data` in the container
         # echo "/data points to: $(readlink /data)"
 
         # Exit (to be implemented) if /data (/mounts/data/sshfs) is not mounted outside the `bwrap` container
-        ${pkgs.util-linux}/bin/findmnt --task 1 /mounts/data/sshfs || echo -e "\nIs /data mounted?\n"
+        ${pkgs.util-linux}/bin/findmnt --task 1 /mounts/data/sshfs > /dev/null || echo -e "\nIs /data mounted?\n"
 
 
         echo "Running ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon)..." \
@@ -209,20 +213,20 @@
           # set +a
         '';
         # Custom Env:
-        # env = [
-        #   {
-        #     name = "DEV_SHELL";
-        #     value = "blender-4-4-3";
-        #   }
-        #   # {
-        #   #   name = "PATH";
-        #   #   prefix = path;
-        #   # }
-        #   # {
-        #   #   name = "DEFAULT_ARGS";
-        #   #   value = "${builtins.toString blender-default-args}";
-        #   # }
-        # ];
+#        env = [
+#          {
+#            name = "AYON_LAUNCHER_STORAGE_DIR";
+#            value = "/data/share/tools/AYON-deps";
+#          }
+#          # {
+#          #   name = "PATH";
+#          #   prefix = path;
+#          # }
+#          # {
+#          #   name = "DEFAULT_ARGS";
+#          #   value = "${builtins.toString blender-default-args}";
+#          # }
+#        ];
       };
     };
   };
