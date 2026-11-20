@@ -111,7 +111,7 @@
       #   13221   13218 S+    |   |   |           \_ sleep
 
       # $ pidof bwrap
-      #15717
+      # 15717
 
       # $ ps -e -o pid,ppid,stat,comm --forest
 
@@ -124,29 +124,10 @@
       # `findmnt --task 1 /data`, which will search `/proc/1/mountinfo` instead
       # of `/proc/$$/mountinfo` (`$$` refers to self `pid`).
       runScript-ayon-launcher = pkgs.writeScriptBin "ayon-${version-dashed}-bin" ''
-        # env
         echo "Process ID:" $$
-        # mount
-        # findmnt /data
-        # findmnt -m /data || echo "reading from /etc/fstab"
-        # findmnt -s /data || echo "reading from /etc/fstab"
-        # findmnt -N 1 /data || echo "/data not mounted on host"
-        # findmnt --real /data
-        # sleep infinity
-        # exit 1
-        # For some reason, findmnt is not working as expected
-        # probably because we are in a bwrap (nix-shell -p bubblewrap) container and all directories
-        # are mounted from the host. That does not mean that the
-        # the host mounted it in the first place.
 
         # Exit if /data is not mounted outside the `bwrap` container
         ${pkgs.util-linux}/bin/findmnt --task 1 /data || echo "Is /data mounted? Exitting..." && exit 1;
-
-        # mount
-        # mount | awk '{if ($3 == "/data") { exit 0}} ENDFILE{exit -1}'
-        # cat /proc/mounts
-        # mountpoint /data
-        # mountpoint -q /data && echo hi
 
         echo "Running ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon)..." \
           && ${pkgs.lib.getBin (pkgs.glibc)}/bin/ldd $(which ayon) | sort --ignore-leading-blanks --ignore-case | grep -E --color "\b(not found)\b|$" \
@@ -154,7 +135,7 @@
           && echo "- with default args \"${builtins.toString ayon-default-args}\"" \
           && echo "- with extra args \"$@\"" \
           && echo "..." \
-          && ayon ${builtins.toString ayon-default-args} $@ || ${pkgs.util-linux}/bin/findmnt --mountpoint /data > /dev/null && echo -e "\nIs /data mounted?"
+          && ayon ${builtins.toString ayon-default-args} $@
       '';
 
     ayon-default-args = [
