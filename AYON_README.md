@@ -110,7 +110,7 @@ So this is what Ayon is doing:
 2. Run executable
    As in `blender --python-use-system-env <blend_file>`
 
-`PYTHONPATH` (defai;t):
+`PYTHONPATH` (default):
 ```
 /home/user/Downloads/blender-4.4.3-linux-x64/4.4/python/lib/python3.11
 /home/user/Downloads/blender-4.4.3-linux-x64/4.4/python/lib/python3.11/site-packages
