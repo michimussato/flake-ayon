@@ -50,6 +50,8 @@
         export PATH=${path}:$PATH
 
         export AYON_LAUNCHER_STORAGE_DIR="/data/share/tools/AYON-deps"
+        # Had no effect here:
+        # export AYON_MENU_LABEL="OpenStudioLandscapes-Ayon"
 
         # don't remember what this was for:
         # (does not seem to have an effect on the env anyway)
