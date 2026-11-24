@@ -53,6 +53,22 @@
         # Had no effect here:
         # export AYON_MENU_LABEL="OpenStudioLandscapes-Ayon"
 
+        # TEMP
+        # - [x] tested
+        # - [x] is effective by itself
+        # - affects Ayon
+        # However:
+        # - Saved session recovery to "/tmp/quit.blend"
+        export TEMP="$XDG_DATA_HOME/OpenStudioLandscapes/OpenStudioLandscapes-Ayon/logs.temp"
+        mkdir -p $TEMP
+
+        # TMP
+        # - [x] tested
+        # - [x] is effective by itself
+        # - affects Ayon and Blender
+        export TMP="$XDG_DATA_HOME/OpenStudioLandscapes/OpenStudioLandscapes-Ayon/logs.tmp"
+        mkdir -p $TMP
+
         # don't remember what this was for:
         # (does not seem to have an effect on the env anyway)
         # an alternative could be to use lib.makeLibraryPath
