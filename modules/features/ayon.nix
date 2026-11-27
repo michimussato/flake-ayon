@@ -156,7 +156,8 @@
         # $? represents the last return code
         if [ $? -gt 0 ]; then
           echo -e "\nIs /data mounted?\n"
-          echo "Exitting."
+          echo "Exitting..."
+          read -n 1 -r -s -p $'Press any key to continue...\n'
           exit 1
         fi
 
