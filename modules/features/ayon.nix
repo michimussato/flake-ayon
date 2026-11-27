@@ -14,7 +14,7 @@
       # Base Deps
       # For all Ayon Launchers?
       pkgs-base = with pkgs; [
-        kitty
+#        kitty
         # /home/michael/Downloads/AYON-1.6.3-linux-rocky9/ayon --headless
         # - AYON_SERVER_URL
         # - AYON_API_KEY
