@@ -1,0 +1,47 @@
+{
+  "enabled": true,
+  "host_name": "nuke",
+  "environment": "{}",
+  "variants": [
+    {
+      "name": "15-1v1-flake-app",
+      "label": "15.1v1 App",
+      "group_label": "15.1v1 Flake",
+      "show_grouped": true,
+      "executables": {
+        "windows": [],
+        "linux": [
+          "/run/current-system/sw/bin/ayon-flake-prod-wrapper"
+        ],
+        "darwin": []
+      },
+      "arguments": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "environment": "{\n  \"FLAKE_ACTION\": \"run\",\n  \"FLAKE_PATH\": \"github:michimussato/flake-prod\",\n  \"FLAKE_OUTPUT\": \"nuke-15-1v1-app\"\n}",
+      "redirect_output": true
+    },
+    {
+      "name": "15-1v1-flake-shell",
+      "label": "15.1v1 Shell",
+      "group_label": "15.1v1 Flake",
+      "show_grouped": true,
+      "executables": {
+        "windows": [],
+        "linux": [
+          "/run/current-system/sw/bin/alacritty"
+        ],
+        "darwin": []
+      },
+      "arguments": {
+        "windows": [],
+        "linux": [],
+        "darwin": []
+      },
+      "environment": "{\n  \"FLAKE_ACTION\": \"develop\",\n  \"FLAKE_PATH\": \"github:michimussato/flake-prod\",\n  \"FLAKE_OUTPUT\": \"nuke-15-1v1-devshell\"\n}",
+      "redirect_output": true
+    }
+  ]
+}
