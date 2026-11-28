@@ -31,7 +31,7 @@
       "executables": {
         "windows": [],
         "linux": [
-          "/run/current-system/sw/bin/alacritty"
+          "/run/current-system/sw/bin/ayon-flake-prod-wrapper"
         ],
         "darwin": []
       },
